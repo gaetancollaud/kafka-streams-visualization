@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { KafkaStreamGraphComponent } from './kafka-stream-graph/kafka-stream-graph.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -10,7 +11,8 @@ import { KafkaStreamGraphComponent } from './kafka-stream-graph/kafka-stream-gra
     KafkaStreamGraphComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

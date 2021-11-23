@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 
 import * as mermaid from "mermaid";
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
@@ -7,9 +7,9 @@ interface CurrentGraphNodeNameRef {
   currentGraphNodeName: string;
 }
 
-const name = (value: any) => value.replaceAll("-", "-<br>");
+const nameFunction = (value: any) => value.replaceAll("-", "-<br>");
 
-class subTopology {
+class SubTopology {
   public static pattern = /Sub-topology: ([0-9]*)/;
 
   private static startFormatter(subTopology: string) {
@@ -33,11 +33,11 @@ class subTopology {
   }
 }
 
-class source {
+class Source {
   public static pattern = /Source:\s+(\S+)\s+\(topics:\s+\[(.*)\]\)/;
 
   private static formatter(source: string, topic: string) {
-    return `${topic}[${topic}] --> ${source}(${name(source)})`;
+    return `${topic}[${topic}] --> ${source}(${nameFunction(source)})`;
   }
 
   public static visit(line: string, outside: string[], topicSourcesList: string[], ref: CurrentGraphNodeNameRef): void {
@@ -51,13 +51,13 @@ class source {
       });
     }
   }
-};
+}
 
-class processor {
+class Processor {
   public static pattern = /Processor:\s+(\S+)\s+\(stores:\s+\[(.*)\]\)/;
 
   private static formatter(processor: string, store: string): string {
-    return (processor.includes("JOIN")) ? `${store}[(${name(store)})] --> ${processor}(${name(processor)})` : `${processor}(${name(processor)}) --> ${store}[(${name(store)})]`;
+    return (processor.includes("JOIN")) ? `${store}[(${nameFunction(store)})] --> ${processor}(${nameFunction(processor)})` : `${processor}(${nameFunction(processor)}) --> ${store}[(${nameFunction(store)})]`;
   }
 
   public static visit(line: string, ref: CurrentGraphNodeNameRef, outside: string[], stateStoresList: string[]): void {
@@ -74,11 +74,11 @@ class processor {
   }
 }
 
-class sink {
+class Sink {
   public static pattern = /Sink:\s+(\S+)\s+\(topic:\s+(.*)\)/;
 
   private static formatter(sink: string, topic: string) {
-    return `${sink}(${name(sink)}) --> ${topic}[${topic}]`;
+    return `${sink}(${nameFunction(sink)}) --> ${topic}[${topic}]`;
   }
 
   public static visit(line: string, ref: CurrentGraphNodeNameRef, outside: string[], topicSinksList: string[]): void {
@@ -92,11 +92,11 @@ class sink {
   }
 }
 
-class rightArrow {
+class RightArrow {
   public static pattern = /\s*-->\s+(.*)/;
 
   private static formatter(src: string, dst: string) {
-    return `${src}(${name(src)}) --> ${dst}(${name(dst)})`;
+    return `${src}(${nameFunction(src)}) --> ${dst}(${nameFunction(dst)})`;
   }
 
   public static visit(line: string, ref: CurrentGraphNodeNameRef, subTopologies: string[]): void {
@@ -114,27 +114,32 @@ class rightArrow {
   templateUrl: './kafka-stream-graph.component.html',
   styleUrls: ['./kafka-stream-graph.component.scss']
 })
-export class KafkaStreamGraphComponent implements OnInit, AfterViewInit {
+export class KafkaStreamGraphComponent implements OnInit {
 
   public svgContent: SafeHtml | undefined;
+
+  @Input()
+  public set topologyDescription(topologyDescription: string) {
+    let mermaidGraphDefinition = this.toMermaid(topologyDescription);
+
+    mermaid.default.mermaidAPI.render("mermaid-graph-" + Date.now(), mermaidGraphDefinition.description, (svgCode: string) => {
+      setTimeout(() => {
+        this.svgContent = svgCode;
+        this.svgContent = this.sanitizer.bypassSecurityTrustHtml(svgCode);
+      });
+    });
+  }
 
   constructor(private sanitizer: DomSanitizer) {
   }
 
   ngOnInit(): void {
-
-  }
-
-  ngAfterViewInit(): void {
-
     mermaid.default.initialize({
       theme: "forest",
       startOnLoad: false
     });
 
-    this.initGraph();
   }
-
 
   private toMermaid(topology: string): any {
     let lines = topology.split('\n');
@@ -149,20 +154,20 @@ export class KafkaStreamGraphComponent implements OnInit, AfterViewInit {
 
     for (const line of lines) {
       switch (true) {
-        case subTopology.pattern.test(line):
-          subTopology.visit(line, subTopologies, subTopologiesList);
+        case SubTopology.pattern.test(line):
+          SubTopology.visit(line, subTopologies, subTopologiesList);
           break;
-        case source.pattern.test(line):
-          source.visit(line, outside, topicSourcesList, currentGraphNodeName);
+        case Source.pattern.test(line):
+          Source.visit(line, outside, topicSourcesList, currentGraphNodeName);
           break;
-        case processor.pattern.test(line):
-          processor.visit(line, currentGraphNodeName, outside, stateStoresList);
+        case Processor.pattern.test(line):
+          Processor.visit(line, currentGraphNodeName, outside, stateStoresList);
           break;
-        case sink.pattern.test(line):
-          sink.visit(line, currentGraphNodeName, outside, topicSinksList);
+        case Sink.pattern.test(line):
+          Sink.visit(line, currentGraphNodeName, outside, topicSinksList);
           break;
-        case rightArrow.pattern.test(line):
-          rightArrow.visit(line, currentGraphNodeName, subTopologies);
+        case RightArrow.pattern.test(line):
+          RightArrow.visit(line, currentGraphNodeName, subTopologies);
           break;
         default:
           break;
@@ -171,7 +176,7 @@ export class KafkaStreamGraphComponent implements OnInit, AfterViewInit {
     }
 
     if (subTopologies.length) {
-      subTopologies.push(subTopology.endFormatter());
+      subTopologies.push(SubTopology.endFormatter());
     }
 
     let description = ["graph TD"].concat(outside).concat(subTopologies).concat(topicSourcesList).concat(topicSinksList).concat(stateStoresList).join('\n');
@@ -186,68 +191,6 @@ export class KafkaStreamGraphComponent implements OnInit, AfterViewInit {
       }
     };
   }
-
-
-  private initGraph(): void {
-    const topologyDescription = `Topology
-Sub-topologies:
-Sub-topology: 0
-\tSource:  KSTREAM-SOURCE-0000000000 (topics: [conversation-meta])
-\t--> KSTREAM-TRANSFORM-0000000001
-\tProcessor: KSTREAM-TRANSFORM-0000000001 (stores: [conversation-meta-state])
-\t--> KSTREAM-KEY-SELECT-0000000002
-\t<-- KSTREAM-SOURCE-0000000000
-\tProcessor: KSTREAM-KEY-SELECT-0000000002 (stores: [])
-\t--> KSTREAM-FILTER-0000000005
-\t<-- KSTREAM-TRANSFORM-0000000001
-\tProcessor: KSTREAM-FILTER-0000000005 (stores: [])
-\t--> KSTREAM-SINK-0000000004
-\t<-- KSTREAM-KEY-SELECT-0000000002
-\tSink: KSTREAM-SINK-0000000004 (topic: count-resolved-repartition)
-\t<-- KSTREAM-FILTER-0000000005
-Sub-topology: 1
-\tSource: KSTREAM-SOURCE-0000000006 (topics: [count-resolved-repartition])
-\t--> KSTREAM-AGGREGATE-0000000003
-\tProcessor: KSTREAM-AGGREGATE-0000000003 (stores: [count-resolved])
-\t--> KTABLE-TOSTREAM-0000000007
-\t<-- KSTREAM-SOURCE-0000000006
-\tProcessor: KTABLE-TOSTREAM-0000000007 (stores: [])
-\t--> KSTREAM-SINK-0000000008
-\t<-- KSTREAM-AGGREGATE-0000000003
-\tSink: KSTREAM-SINK-0000000008 (topic: streams-count-resolved)
-\t<-- KTABLE-TOSTREAM-0000000007
-\t\t\t`;
-
-    let mermaidGraphDefinition = this.toMermaid(topologyDescription);
-    console.log(mermaidGraphDefinition.description);
-
-    mermaid.default.mermaidAPI.render("mermaid-graph-" + Date.now(), mermaidGraphDefinition.description, (svgCode: string) => {
-
-      console.log(svgCode);
-      setTimeout(() => {
-        this.svgContent = svgCode;
-        this.svgContent =  this.sanitizer.bypassSecurityTrustHtml(svgCode);
-      });
-    });
-
-    // $('#sub-topologies-details').html(mermaidGraphDefinition.details.subTopologies.length);
-    // $('#topic-sources-details').text(mermaidGraphDefinition.details.topicSources.length);
-    // $('#topic-sinks-details').text(mermaidGraphDefinition.details.topicSinks.length);
-    // $('#state-stores-details').text(mermaidGraphDefinition.details.stateStores.length);
-    //
-    // mermaidGraphDefinition.details.topicSources.sort().forEach(topic => {
-    //   $('#topic-sources-list').append(`<li><span class="badge badge-pill badge-primary">$\{topic}</span></li>`)
-    // });
-    //
-    // mermaidGraphDefinition.details.topicSinks.sort().forEach(topic => {
-    //   $('#topic-sinks-list').append(`<li><span class="badge badge-pill badge-primary">$\{topic}</span></li>`)
-    // });
-    //
-    // mermaidGraphDefinition.details.stateStores.sort().forEach(store => {
-    //   $('#state-stores-list').append(`<li><span class="badge badge-pill badge-primary">$\{store}</span></li>`)
-    // });
-
-  };
 
 
 }
