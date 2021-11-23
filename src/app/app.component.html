@@ -1,4 +1,7 @@
-<h1>TODO input stuff</h1>
-<textarea [(ngModel)]="topologyDescription"></textarea>
+<h1>Kafka stream visualization</h1>
 
-<app-kafka-stream-graph [topologyDescription]="topologyDescription"></app-kafka-stream-graph>
+<div class="content">
+  <textarea [(ngModel)]="topologyDescription"></textarea>
+
+  <app-kafka-stream-graph [topologyDescription]="topologyDescription"></app-kafka-stream-graph>
+</div>s
