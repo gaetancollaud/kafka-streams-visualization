@@ -46,6 +46,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.getTopology().subscribe(topology => this.topologyDefined = !!topology);
+
+    setTimeout(() => {
+      this.store.setTopology(TOPOLOGY_EXAMPLE_1);
+    }, 10);
   }
 
 

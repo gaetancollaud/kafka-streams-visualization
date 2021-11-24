@@ -29,7 +29,7 @@ export class Store {
 
   public setTopology(topology: string) {
     this.topology.next(topology);
-    window.location.hash = btoa(topology);
+    // window.location.hash = btoa(topology);
   }
 
   public getTopology(): Observable<string | null> {

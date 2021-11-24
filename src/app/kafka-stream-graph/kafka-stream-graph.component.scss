@@ -1,3 +1,8 @@
+:host {
+  display: flex;
+  flex-direction: row;
+}
+
 svg {
   resize: none;
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -5,6 +10,10 @@ svg {
 
 div {
   text-align: center;
+}
+
+canvas{
+  margin: auto;
 }
 
 
