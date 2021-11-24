@@ -1,13 +1,7 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Store} from './store.service';
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
-})
-export class AppComponent {
-
-  public topologyDescription = `Topology
+const TOPOLOGY_EXAMPLE_1 = `Topology
 Sub-topologies:
 Sub-topology: 0
 \tSource:  KSTREAM-SOURCE-0000000000 (topics: [conversation-meta])
@@ -36,4 +30,32 @@ Sub-topology: 1
 \t<-- KTABLE-TOSTREAM-0000000007
 \t\t\t`;
 
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent implements OnInit {
+
+  public topologyDefined: boolean = false;
+
+  public constructor(private store: Store) {
+
+  }
+
+
+  ngOnInit(): void {
+    this.store.getTopology().subscribe(topology => this.topologyDefined = !!topology);
+  }
+
+
+  onReset() {
+    this.store.clearTopology();
+  }
+
+
+  onExample1() {
+    this.store.setTopology(TOPOLOGY_EXAMPLE_1);
+
+  }
 }
