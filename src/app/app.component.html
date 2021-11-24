@@ -3,9 +3,11 @@
 <div class="actions">
   <button (click)="onReset()">Reset</button>
   <button (click)="onExample1()">Example 1</button>
+  <button (click)="onExample2()">Example 2</button>
 </div>
 <div class="content">
-  <textarea *ngIf="!topologyDefined" placeholder="Paste your topology here"></textarea>
+  <textarea *ngIf="!topologyDefined" placeholder="Paste your topology in the ASCII format here"
+            [(ngModel)]="textAreaValue" (keyup)="textAreaChanged()"></textarea>
 
   <app-kafka-stream-graph *ngIf="topologyDefined"></app-kafka-stream-graph>
 </div>
