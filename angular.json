@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "kafka-stream-mermaid": {
+    "kafka-stream-visualization": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/kafka-stream-mermaid",
+            "outputPath": "dist/kafka-stream-visualization",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -73,10 +73,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "kafka-stream-mermaid:build:production"
+              "browserTarget": "kafka-stream-visualization:build:production"
             },
             "development": {
-              "browserTarget": "kafka-stream-mermaid:build:development"
+              "browserTarget": "kafka-stream-visualization:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,7 +84,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "kafka-stream-mermaid:build"
+            "browserTarget": "kafka-stream-visualization:build"
           }
         },
         "test": {
@@ -111,5 +111,5 @@
       }
     }
   },
-  "defaultProject": "kafka-stream-mermaid"
+  "defaultProject": "kafka-stream-visualization"
 }

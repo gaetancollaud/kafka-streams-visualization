@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/kafka-stream-mermaid'),
+      dir: require('path').join(__dirname, './coverage/kafka-stream-visualization'),
       subdir: '.',
       reporters: [
         { type: 'html' },
