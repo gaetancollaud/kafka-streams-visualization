@@ -20,4 +20,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           npm install
-          npm run ng -- deploy --base-href=/kafka-stream-visualization/ --name="Gaétan Collaud" --email=gaetan.collaud@gmail.com
+          npm run ng -- deploy --base-href=/kafka-streams-visualization/ --name="Gaétan Collaud" --email=gaetan.collaud@gmail.com

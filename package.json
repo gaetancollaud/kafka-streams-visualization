@@ -1,5 +1,5 @@
 {
-  "name": "kafka-stream-visualization",
+  "name": "kafka-streams-visualization",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng deploy --base-href=/kafka-stream-visualization/"
+    "deploy": "ng deploy --base-href=/kafka-streams-visualization/"
   },
   "private": true,
   "dependencies": {
