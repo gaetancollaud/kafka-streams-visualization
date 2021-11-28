@@ -1,27 +1,38 @@
 # Kafka streams visualization
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.3.
+This small application allows you to simply create a graph image from a Kafka Streams Ascii topology.
 
-## Development server
+It was heavily inspired by
+ - https://github.com/zz85/kafka-streams-viz
+ - Work from [danielpetisme](https://github.com/danielpetisme) on Quarkus [dev module for Kafka Streams](https://github.com/quarkusio/quarkus/blob/main/extensions/kafka-streams/deployment/src/main/resources/dev-templates/kafka-streams-topology.html)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+I wanted to have something more clean that the rough images of zz85/kafka-streams-viz and I also wanted to have a standalone application as not everyone is using
+Quarkus
 
-## Code scaffolding
+## [Live version](https://gaetancollaud.github.io/kafka-streams-visualization/)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+This app is deployed using github pages: https://gaetancollaud.github.io/kafka-streams-visualization/
 
-## Build
+## How to use
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Simply use [Toplogy.describe()](https://kafka.apache.org/23/javadoc/org/apache/kafka/streams/Topology.html#describe--)
+from Kafka Streams to get the Topology in Ascii format and put the output in the form
 
-## Running unit tests
+```java
+Topology myTopology = new StreamsBuilder()
+  // yourTopologyHere()
+  .build();
+System.out.println(myTopology.describe()); // put this output in the form
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Features
 
-## Running end-to-end tests
+ - [x] Render to SVG
+ - [x] Render to Canvas (to allow copy/paste of the image)
+ - [x] Topology stored in the URL (for easy exchange)
+ - [ ] Download images
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+# Under the hood
+ - [Mermaid.js](https://mermaid-js.github.io/mermaid/#/)
+ - [Angular](https://angular.io/)
+ - [Angular Material](https://material.angular.io/)
