@@ -14,13 +14,15 @@ import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
 import {GraphRenderSvgComponent} from './graph-render-svg/graph-render-svg.component';
 import {GraphRenderCanvasComponent} from './graph-render-canvas/graph-render-canvas.component';
+import { ForkMeComponent } from './fork-me/fork-me.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AsciiInputComponent,
     GraphRenderSvgComponent,
-    GraphRenderCanvasComponent
+    GraphRenderCanvasComponent,
+    ForkMeComponent
   ],
   imports: [
     BrowserModule,
