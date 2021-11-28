@@ -1,20 +1,15 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-
-import * as mermaid from 'mermaid';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {AsciiToMermaid} from '../utils/ascii-to-mermaid';
+import {AfterViewInit, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
+import {ReplaySubject, Subject, takeUntil} from 'rxjs';
 import {Store} from '../store.service';
-import {debounceTime, ReplaySubject, Subject, takeUntil} from 'rxjs';
-
 
 @Component({
-  selector: 'app-kafka-stream-graph',
-  templateUrl: './kafka-stream-graph.component.html',
-  styleUrls: ['./kafka-stream-graph.component.scss']
+  selector: 'app-graph-render-canvas',
+  templateUrl: './graph-render-canvas.component.html',
+  styleUrls: ['./graph-render-canvas.component.scss']
 })
-export class KafkaStreamGraphComponent implements OnInit, AfterViewInit, OnDestroy {
+export class GraphRenderCanvasComponent implements AfterViewInit, OnDestroy {
 
-  public svgContent: SafeHtml | undefined;
   private destroySubject: Subject<any> = new ReplaySubject();
 
   @ViewChild('canvas')
@@ -23,47 +18,34 @@ export class KafkaStreamGraphComponent implements OnInit, AfterViewInit, OnDestr
   constructor(private sanitizer: DomSanitizer, private store: Store) {
   }
 
-  ngOnInit(): void {
-    mermaid.default.initialize({
-      theme: 'default',
-      // themeCSS: '.label foreignObject { overflow: visible; }',
-      startOnLoad: false
-    });
-
-
-  }
-
   ngAfterViewInit(): void {
-
-    this.store.getTopology()
+    this.store.getTopologySvg()
       .pipe(
         takeUntil(this.destroySubject),
-        debounceTime(300)
       )
-      .subscribe(topology => {
-        if (topology) {
-          const mermaidGraphDefinition: string = AsciiToMermaid.toMermaid(topology);
-
-          mermaid.default.mermaidAPI.render('mermaid-graph-' + Date.now(), mermaidGraphDefinition, (svgCode: string) => {
-
-            this.printSvgToCanvas(svgCode);
-
-            this.svgContent = svgCode;
-            this.svgContent = this.sanitizer.bypassSecurityTrustHtml(svgCode);
-          });
+      .subscribe(topologySvg => {
+        if (topologySvg) {
+          this.printSvgToCanvas(topologySvg);
         } else {
-          this.svgContent = undefined;
+          this.clearCanvas();
         }
       });
   }
-
 
   ngOnDestroy(): void {
     this.destroySubject.next(null);
     this.destroySubject.complete();
   }
 
-  printSvgToCanvas(svgText: string): void {
+  private clearCanvas(): void {
+    let canvas = this.canvas?.nativeElement as HTMLCanvasElement;
+    let ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+    if (ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  private printSvgToCanvas(svgText: string): void {
     try {
       // can use the domUrl function from the browser
       let domUrl = window.URL || window.webkitURL || window;
@@ -95,10 +77,12 @@ export class KafkaStreamGraphComponent implements OnInit, AfterViewInit, OnDestr
         if (ctx) {
           ctx.drawImage(img, 0, 0);
         }
-        // we don't need the original any more
-        domUrl.revokeObjectURL(url);
-        // now we can resolve the promise, passing the base64 url
-        console.log('url', canvas.toDataURL());
+
+        // TODO NOT WORKING
+        // // we don't need the original any more
+        // domUrl.revokeObjectURL(url);
+        // // now we can resolve the promise, passing the base64 url
+        // console.log('url', canvas.toDataURL());
       };
 
       img.crossOrigin = 'Anonymous';

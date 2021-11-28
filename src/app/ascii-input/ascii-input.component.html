@@ -1,0 +1,31 @@
+<div class="actions">
+  <!--  <button (click)="onReset()">Reset</button>-->
+
+</div>
+
+
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+    <mat-card-title>Kafka Streams ASCII</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      Paste your topology in the ASCII format here. This can be printed by using <a
+      href="https://kafka.apache.org/23/javadoc/org/apache/kafka/streams/Topology.html#describe--">Topology.describe()</a>.
+    </p>
+    <form [formGroup]="formGroup">
+      <mat-form-field appearance="outline">
+        <textarea matInput placeholder="Paste here"
+                  formControlName="ascii"></textarea>
+      </mat-form-field>
+    </form>
+
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="onSave()">Convert to image</button>
+    <button mat-raised-button (click)="onClear()">Clear</button>
+    <button mat-button color="warn" (click)="onExample1()">Example 1</button>
+    <button mat-button color="warn" (click)="onExample2()">Example 2</button>
+  </mat-card-actions>
+</mat-card>

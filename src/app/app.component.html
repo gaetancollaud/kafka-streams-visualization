@@ -1,13 +1,24 @@
-<h1>Kafka stream visualization</h1>
+<mat-toolbar>
+  <span>Kafka Streams visualization</span>
+  <span class="example-spacer"></span>
+  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <mat-icon>favorite</mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+    <mat-icon>share</mat-icon>
+  </button>
+</mat-toolbar>
 
-<div class="actions">
-  <button (click)="onReset()">Reset</button>
-  <button (click)="onExample1()">Example 1</button>
-  <button (click)="onExample2()">Example 2</button>
-</div>
-<div class="content">
-  <textarea *ngIf="!topologyDefined" placeholder="Paste your topology in the ASCII format here"
-            [(ngModel)]="textAreaValue" (keyup)="textAreaChanged()"></textarea>
 
-  <app-kafka-stream-graph *ngIf="topologyDefined"></app-kafka-stream-graph>
-</div>
+<mat-tab-group backgroundColor="primary" mat-align-tabs="center" animationDuration="0ms" #tabGroup>
+  <mat-tab label="Ascii">
+    <app-ascii-input></app-ascii-input>
+  </mat-tab>
+  <mat-tab label="SVG render">
+    <app-graph-render-svg></app-graph-render-svg>
+  </mat-tab>
+  <mat-tab label="Canvas render">
+    <app-graph-render-canvas></app-graph-render-canvas>
+  </mat-tab>
+</mat-tab-group>
+
