@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatTabGroup} from '@angular/material/tabs';
+import {MatLegacyTabGroup as MatTabGroup} from '@angular/material/legacy-tabs';
 import * as mermaid from 'mermaid';
 import {Store} from './store.service';
 
