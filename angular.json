@@ -74,10 +74,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "kafka-streams-visualization:build:production"
+              "buildTarget": "kafka-streams-visualization:build:production"
             },
             "development": {
-              "browserTarget": "kafka-streams-visualization:build:development"
+              "buildTarget": "kafka-streams-visualization:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -85,7 +85,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "kafka-streams-visualization:build"
+            "buildTarget": "kafka-streams-visualization:build"
           }
         },
         "test": {
