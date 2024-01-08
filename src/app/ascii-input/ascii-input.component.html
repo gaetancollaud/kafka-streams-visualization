@@ -6,7 +6,10 @@
     </p>
     <form [formGroup]="formGroup">
       <mat-form-field appearance="outline">
-        <textarea matInput placeholder="Paste here"
+        <textarea matInput
+                  placeholder="Paste here"
+                  cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="20" cdkAutosizeMaxRows="20"
                   formControlName="ascii"></textarea>
       </mat-form-field>
     </form>
