@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TOPOLOGY_EXAMPLE_1, TOPOLOGY_EXAMPLE_2} from './examples';
 import {Store} from '../store.service';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {ReplaySubject, Subject, takeUntil} from 'rxjs';
 
 @Component({
@@ -11,10 +11,10 @@ import {ReplaySubject, Subject, takeUntil} from 'rxjs';
 })
 export class AsciiInputComponent implements OnInit, OnDestroy {
 
-  public formGroup: FormGroup;
+  public formGroup: UntypedFormGroup;
   private destroySubject: Subject<any> = new ReplaySubject();
 
-  public constructor(private store: Store, formBuilder: FormBuilder) {
+  public constructor(private store: Store, formBuilder: UntypedFormBuilder) {
     this.formGroup = formBuilder.group({
       'ascii': []
     })

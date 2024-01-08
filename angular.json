@@ -112,6 +112,5 @@
         }
       }
     }
-  },
-  "defaultProject": "kafka-streams-visualization"
+  }
 }
