@@ -6,8 +6,7 @@ import {Store} from '../store.service';
 @Component({
     selector: 'app-graph-render-canvas',
     templateUrl: './graph-render-canvas.component.html',
-    styleUrls: ['./graph-render-canvas.component.scss'],
-    standalone: false
+    styleUrls: ['./graph-render-canvas.component.scss']
 })
 export class GraphRenderCanvasComponent implements AfterViewInit, OnDestroy {
 

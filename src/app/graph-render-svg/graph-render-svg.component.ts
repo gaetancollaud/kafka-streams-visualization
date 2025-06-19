@@ -2,12 +2,13 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {ReplaySubject, Subject, takeUntil} from 'rxjs';
 import {Store} from '../store.service';
+import { NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-graph-render-svg',
     templateUrl: './graph-render-svg.component.html',
     styleUrls: ['./graph-render-svg.component.scss'],
-    standalone: false
+    imports: [NgIf]
 })
 export class GraphRenderSvgComponent implements OnInit, OnDestroy {
 

@@ -17,29 +17,26 @@ import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    AsciiInputComponent,
-    GraphRenderSvgComponent,
-    GraphRenderCanvasComponent,
-    ForkMeComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTabsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [AppComponent],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTabsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCardModule,
+        AsciiInputComponent,
+        GraphRenderSvgComponent,
+        GraphRenderCanvasComponent,
+        ForkMeComponent,
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }
