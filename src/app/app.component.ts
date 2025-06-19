@@ -2,6 +2,8 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import * as mermaid from 'mermaid';
 import {Store} from './store.service';
 import {MatTabGroup} from '@angular/material/tabs';
+import mermaidAPI from "mermaid/mermaidAPI";
+import Theme = mermaidAPI.Theme;
 
 @Component({
     selector: 'app-root',
@@ -19,12 +21,12 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     mermaid.default.initialize({
-      theme: 'default',
+      theme: 'default' as Theme,
       startOnLoad: false
     });
     this.store.getTopologySvg().subscribe(svg => {
       if (svg && this.tabGroup) {
-        // as soon as an svg is rendered, switch to the svg tab
+        // as soon as a svg is rendered, switch to the svg tab
         this.tabGroup.selectedIndex = 1;
       }
     });
