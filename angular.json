@@ -20,9 +20,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": {
-              "base": "dist/kafka-streams-visualization"
-            },
+            "outputPath": "dist/kafka-streams-visualization",
             "index": "src/index.html",
             "polyfills": [
               "src/polyfills.ts"
