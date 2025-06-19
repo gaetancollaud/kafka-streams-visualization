@@ -92,7 +92,10 @@
         "deploy": {
           "builder": "angular-cli-ghpages:deploy",
           "options": {
-            "buildTarget": "test:build:production"
+            "repo": "https://github.com/gaetancollaud/kafka-streams-visualization.git",
+            "baseHref": "https://gaetancollaud.github.io/kafka-streams-visualization/",
+            "name": "Gaétan Collaud",
+            "email": "gaetan.collaud@gmail.com"
           }
         }
       }
