@@ -10,10 +10,10 @@
     <app-ascii-input></app-ascii-input>
   </mat-tab>
   <mat-tab label="SVG render">
-    <app-graph-render-svg></app-graph-render-svg>
+    <app-graph-render-svg [topologySvg]="store.topologySvg()"></app-graph-render-svg>
   </mat-tab>
   <mat-tab label="Canvas render">
-    <app-graph-render-canvas></app-graph-render-canvas>
+    <app-graph-render-canvas [topologySvg]="store.topologySvg()"></app-graph-render-canvas>
   </mat-tab>
 </mat-tab-group>
 

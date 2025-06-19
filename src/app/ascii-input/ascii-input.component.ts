@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, effect, OnDestroy, OnInit} from '@angular/core';
 import {TOPOLOGY_EXAMPLE_1, TOPOLOGY_EXAMPLE_2} from './examples';
 import {Store} from '../store.service';
 import { UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -24,12 +24,14 @@ export class AsciiInputComponent implements OnInit, OnDestroy {
     this.formGroup = formBuilder.group({
       'ascii': []
     })
+
+    effect(() => {
+      const topology = this.store.topology();
+      this.formGroup.patchValue({ascii: topology})
+    });
   }
 
   ngOnInit(): void {
-    this.store.getTopology()
-      .pipe(takeUntil(this.destroySubject))
-      .subscribe(topology => this.formGroup.patchValue({ascii: topology}));
   }
 
   ngOnDestroy(): void {
@@ -45,9 +47,6 @@ export class AsciiInputComponent implements OnInit, OnDestroy {
   onExample2() {
     this.formGroup.patchValue({ascii: TOPOLOGY_EXAMPLE_2})
     this.onSave();
-  }
-
-  textAreaChanged() {
   }
 
   onSave() {

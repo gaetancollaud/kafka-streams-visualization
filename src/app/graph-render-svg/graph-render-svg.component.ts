@@ -1,38 +1,23 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {ReplaySubject, Subject, takeUntil} from 'rxjs';
-import {Store} from '../store.service';
+import {Component, computed, inject, input} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
 
 
 @Component({
-    selector: 'app-graph-render-svg',
-    templateUrl: './graph-render-svg.component.html',
-    styleUrls: ['./graph-render-svg.component.scss'],
-    imports: []
+  selector: 'app-graph-render-svg',
+  templateUrl: './graph-render-svg.component.html',
+  styleUrls: ['./graph-render-svg.component.scss'],
+  imports: []
 })
-export class GraphRenderSvgComponent implements OnInit, OnDestroy {
+export class GraphRenderSvgComponent {
 
-  public svgContent: SafeHtml | undefined;
-  private destroySubject: Subject<any> = new ReplaySubject();
+  private sanitizer = inject(DomSanitizer);
 
-  constructor(private sanitizer: DomSanitizer, private store: Store) {
-  }
+  topologySvg = input.required<string | null>();
 
-  ngOnInit(): void {
-    this.store.getTopologySvg()
-      .pipe(
-        takeUntil(this.destroySubject),
-      )
-      .subscribe(topologySvg => {
-        this.svgContent = topologySvg ? this.sanitizer.bypassSecurityTrustHtml(topologySvg) : undefined;
-      });
-  }
-
-
-  ngOnDestroy(): void {
-    this.destroySubject.next(null);
-    this.destroySubject.complete();
-  }
+  svgContent = computed(() => {
+    let svg = this.topologySvg();
+    return svg ? this.sanitizer.bypassSecurityTrustHtml(svg) : undefined;
+  });
 
 
 }

@@ -1,5 +1,4 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, debounceTime, Observable} from 'rxjs';
+import {effect, Injectable, signal} from '@angular/core';
 import * as mermaid from 'mermaid';
 import {AsciiToMermaid} from './utils/ascii-to-mermaid';
 
@@ -7,8 +6,8 @@ import {AsciiToMermaid} from './utils/ascii-to-mermaid';
   providedIn: 'root'
 })
 export class Store {
-  private topology: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
-  private topologySvg: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  public readonly topology = signal<string | null>(null);
+  public readonly topologySvg = signal<string | null>(null);
 
   public constructor() {
     let hash = window.location.hash;
@@ -24,40 +23,30 @@ export class Store {
       }
     }
 
-    this.getTopology()
-      .pipe(
-        debounceTime(300)
-      ).subscribe((top: string | null) => {
-      if (top) {
+    effect(() => {
+      // TODO debounce 300ms
+      const top = this.topology();
+      if (!top) {
+        this.topologySvg.set(null);
+      } else {
         const mermaidGraphDefinition: string = AsciiToMermaid.toMermaid(top);
         mermaid.default.mermaidAPI.render('mermaid-graph-' + Date.now(), mermaidGraphDefinition, (svgCode: string) => {
-          this.topologySvg.next(svgCode);
+          this.topologySvg.set(svgCode);
         });
-      } else {
-        this.topologySvg.next(null);
       }
-
-    })
+    });
   }
 
   public clearTopology() {
-    this.topology.next(null);
+    this.topology.set(null);
     window.location.hash = '';
   }
 
   public setTopology(topology: string) {
-    if (topology != this.topology.getValue()) {
-      this.topology.next(topology);
+    if (topology != this.topology()) {
+      this.topology.set(topology);
       window.location.hash = btoa(topology);
     }
-  }
-
-  public getTopology(): Observable<string | null> {
-    return this.topology;
-  }
-
-  public getTopologySvg(): Observable<string | null> {
-    return this.topologySvg;
   }
 
 }

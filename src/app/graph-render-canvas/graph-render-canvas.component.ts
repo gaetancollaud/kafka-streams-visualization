@@ -1,40 +1,35 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
-import {ReplaySubject, Subject, takeUntil} from 'rxjs';
-import {Store} from '../store.service';
+import {AfterViewInit, Component, effect, ElementRef, input, ViewChild} from '@angular/core';
 
 @Component({
-    selector: 'app-graph-render-canvas',
-    templateUrl: './graph-render-canvas.component.html',
-    styleUrls: ['./graph-render-canvas.component.scss']
+  selector: 'app-graph-render-canvas',
+  templateUrl: './graph-render-canvas.component.html',
+  styleUrls: ['./graph-render-canvas.component.scss']
 })
-export class GraphRenderCanvasComponent implements AfterViewInit, OnDestroy {
+export class GraphRenderCanvasComponent implements AfterViewInit {
 
-  private destroySubject: Subject<any> = new ReplaySubject();
+  topologySvg = input.required<string | null>();
 
   @ViewChild('canvas')
   private canvas: ElementRef | undefined;
 
-  constructor(private sanitizer: DomSanitizer, private store: Store) {
+  constructor() {
+    effect(() => {
+      this.updateCanvas(this.topologySvg());
+    });
   }
 
   ngAfterViewInit(): void {
-    this.store.getTopologySvg()
-      .pipe(
-        takeUntil(this.destroySubject),
-      )
-      .subscribe(topologySvg => {
-        if (topologySvg) {
-          this.printSvgToCanvas(topologySvg);
-        } else {
-          this.clearCanvas();
-        }
-      });
+    this.updateCanvas(this.topologySvg());
   }
 
-  ngOnDestroy(): void {
-    this.destroySubject.next(null);
-    this.destroySubject.complete();
+  private updateCanvas(svg: string | null) {
+    if (this.canvas) {
+      if (svg && this.canvas) {
+        this.printSvgToCanvas(svg);
+      } else {
+        this.clearCanvas();
+      }
+    }
   }
 
   private clearCanvas(): void {
