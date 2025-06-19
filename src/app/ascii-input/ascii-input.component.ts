@@ -5,9 +5,10 @@ import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {ReplaySubject, Subject, takeUntil} from 'rxjs';
 
 @Component({
-  selector: 'app-ascii-input',
-  templateUrl: './ascii-input.component.html',
-  styleUrls: ['./ascii-input.component.scss']
+    selector: 'app-ascii-input',
+    templateUrl: './ascii-input.component.html',
+    styleUrls: ['./ascii-input.component.scss'],
+    standalone: false
 })
 export class AsciiInputComponent implements OnInit, OnDestroy {
 

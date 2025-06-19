@@ -4,9 +4,10 @@ import {ReplaySubject, Subject, takeUntil} from 'rxjs';
 import {Store} from '../store.service';
 
 @Component({
-  selector: 'app-graph-render-canvas',
-  templateUrl: './graph-render-canvas.component.html',
-  styleUrls: ['./graph-render-canvas.component.scss']
+    selector: 'app-graph-render-canvas',
+    templateUrl: './graph-render-canvas.component.html',
+    styleUrls: ['./graph-render-canvas.component.scss'],
+    standalone: false
 })
 export class GraphRenderCanvasComponent implements AfterViewInit, OnDestroy {
 

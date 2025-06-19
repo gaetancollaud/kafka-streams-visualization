@@ -4,9 +4,10 @@ import {ReplaySubject, Subject, takeUntil} from 'rxjs';
 import {Store} from '../store.service';
 
 @Component({
-  selector: 'app-graph-render-svg',
-  templateUrl: './graph-render-svg.component.html',
-  styleUrls: ['./graph-render-svg.component.scss']
+    selector: 'app-graph-render-svg',
+    templateUrl: './graph-render-svg.component.html',
+    styleUrls: ['./graph-render-svg.component.scss'],
+    standalone: false
 })
 export class GraphRenderSvgComponent implements OnInit, OnDestroy {
 
