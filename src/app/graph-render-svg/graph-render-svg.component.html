@@ -1,1 +1,3 @@
-<div *ngIf="svgContent" [innerHTML]="svgContent"></div>
+@if (svgContent) {
+  <div [innerHTML]="svgContent"></div>
+}
