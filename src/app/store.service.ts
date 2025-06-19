@@ -1,12 +1,17 @@
 import {effect, Injectable, signal} from '@angular/core';
 import * as mermaid from 'mermaid';
 import {AsciiToMermaid} from './utils/ascii-to-mermaid';
+import {toObservable, toSignal} from "@angular/core/rxjs-interop";
+import {debounceTime} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class Store {
   public readonly topology = signal<string | null>(null);
+  private topologyDebounced = toSignal(toObservable(this.topology).pipe(
+    debounceTime(300)
+  ));
   public readonly topologySvg = signal<string | null>(null);
 
   public constructor() {
@@ -24,8 +29,7 @@ export class Store {
     }
 
     effect(() => {
-      // TODO debounce 300ms
-      const top = this.topology();
+      const top = this.topologyDebounced();
       if (!top) {
         this.topologySvg.set(null);
       } else {
