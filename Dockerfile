@@ -19,7 +19,7 @@ RUN npm run build
 FROM nginx:1.28-alpine-slim
 
 # Copy built assets from build stage
-COPY --from=build /app/dist/kafka-streams-visualization /usr/share/nginx/html
+COPY --from=build /app/dist/kafka-streams-visualization/browser /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80
