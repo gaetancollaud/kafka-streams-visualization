@@ -25,6 +25,26 @@ Topology myTopology = new StreamsBuilder()
 System.out.println(myTopology.describe()); // put this output in the form
 ```
 
+## Docker Usage
+
+### Building the Docker Image
+
+To build the Docker image, run the following command from the project root:
+
+```bash
+docker build -t kafka-streams-visualization .
+```
+
+### Running the Container
+
+To run the application in Docker:
+
+```bash
+docker run -p 8080:80 kafka-streams-visualization
+```
+
+The application will be available at `http://localhost:8080`
+
 ## Features
 
  - [x] Render to SVG
