@@ -1,13 +1,19 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, effect, OnDestroy, OnInit} from '@angular/core';
 import {TOPOLOGY_EXAMPLE_1, TOPOLOGY_EXAMPLE_2} from './examples';
 import {Store} from '../store.service';
-import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {ReplaySubject, Subject, takeUntil} from 'rxjs';
+import { MatCard, MatCardContent, MatCardActions } from '@angular/material/card';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-ascii-input',
-  templateUrl: './ascii-input.component.html',
-  styleUrls: ['./ascii-input.component.scss']
+    selector: 'app-ascii-input',
+    templateUrl: './ascii-input.component.html',
+    styleUrls: ['./ascii-input.component.scss'],
+    imports: [MatCard, MatCardContent, FormsModule, ReactiveFormsModule, MatFormField, MatInput, CdkTextareaAutosize, MatCardActions, MatButton]
 })
 export class AsciiInputComponent implements OnInit, OnDestroy {
 
@@ -18,12 +24,14 @@ export class AsciiInputComponent implements OnInit, OnDestroy {
     this.formGroup = formBuilder.group({
       'ascii': []
     })
+
+    effect(() => {
+      const topology = this.store.topology();
+      this.formGroup.patchValue({ascii: topology})
+    });
   }
 
   ngOnInit(): void {
-    this.store.getTopology()
-      .pipe(takeUntil(this.destroySubject))
-      .subscribe(topology => this.formGroup.patchValue({ascii: topology}));
   }
 
   ngOnDestroy(): void {
@@ -39,9 +47,6 @@ export class AsciiInputComponent implements OnInit, OnDestroy {
   onExample2() {
     this.formGroup.patchValue({ascii: TOPOLOGY_EXAMPLE_2})
     this.onSave();
-  }
-
-  textAreaChanged() {
   }
 
   onSave() {
